@@ -48,6 +48,8 @@
 			<scope>test</scope>
 		</dependency>
 
+
+
 		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -55,6 +57,11 @@
 			<version>5.2.11.Final</version>
 		</dependency>
 
+		<dependency>
+			<groupId>pl.allegro.tech.boot</groupId>
+			<artifactId>handlebars-spring-boot-starter</artifactId>
+			<version>0.3.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

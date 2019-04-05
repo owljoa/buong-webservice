@@ -1,4 +1,17 @@
 spring:
+    profiles:
+        active: local # default environment
+
+# local environment
+---
+spring:
+    profiles: local
+    datasource:
+        data: classpath:data-h2.sql # script will be executed when project is initialized
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: create-drop
     h2:
         console:
             enabled: true

@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -45,20 +46,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable();
         http
-            .formLogin()
+//            .formLogin()
 //                .permitAll()
 //                .loginProcessingUrl("/member/login")
 //                .usernameParameter("username")
 //                .passwordParameter("password")
 //                .successHandler(authSuccessHandler)
 //                .failureHandler(authFailureHandler)
-                .and()
+//                .and()
             .logout()
-                .permitAll()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-                .logoutSuccessHandler(logoutSuccessHandler)
+//                .permitAll()
+//                .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+//                .logoutSuccessHandler(logoutSuccessHandler)
                 .and()
             .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .maximumSessions(1);
 
         // "/member/registration", "/member/login" URL만 인증없이 접근 허용
@@ -66,8 +68,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/member/registration").permitAll()
                 .antMatchers(HttpMethod.POST, "/member/login").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll() // 서버가 살아있는지 사전에 확인하는 요청(Chrome 등에서 GET, POST 등 요청 이전에)
                 .antMatchers(HttpMethod.GET, "/").permitAll()
                 .antMatchers(HttpMethod.GET, "/welcome").permitAll()
+                .antMatchers("/member").hasAuthority("USER")
+                .antMatchers("/admin").hasAuthority("ADMIN")
                 .anyRequest().authenticated();
     }
 
@@ -79,12 +84,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public AuthenticationManager customAuthenticationManager() throws Exception {
-        return authenticationManager();
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder());
     }
+
 }

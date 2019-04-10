@@ -6,11 +6,6 @@ spring:
 ---
 spring:
     profiles: local
-    datasource:
-        url: jdbc:mysql://221.163.201.38:8910/test2?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul
-        username: root
-        password: udmt1888!
-        driver-class-name: com.mysql.cj.jdbc.Driver
     jpa:
         show-sql: true
         database: mysql
